@@ -5,10 +5,10 @@ const {
 
 it('should create an artist', () => {
     return frisby
-        .post('http:/localhost:8000/api/artists', {
+        .post('http://localhost:8000/api/artists', {
             name: 'ITP'
         })
         .expect('status', 200)
         .expect('json', 'name', 'ITP')
-        .expect('jstonType', 'id', Joi.number().required())
+        .expect('jsonTypes', 'id', Joi.number().required())
 });
