@@ -144,4 +144,42 @@ app.get('/api/albums/:id', function(request, response) {
   });
 });
 
-app.listen(8000);
+app.patch('/api/tracks/:id', function (request, response){
+  let {
+      id
+  } = request.params;
+  Track.findByPk(id).then((track) => {
+      if (track) {
+          return track.update({
+              name: request.body.name,
+              albumId: request.body.albumId,
+              mediaTypeId: request.body.mediaTypeId,
+              genreId: request.body.genreId,
+              composer: request.body.composer,
+              milliseconds: request.body.milliseconds,
+              bytes: request.body.bytes,
+              unitPrice: request.body.unitPrice
+            });
+      } if(!track) {
+          response.status(404).send();
+          return Promise.reject();
+          
+      }
+
+  })
+  .then((track) =>{
+      response.status(200).json(track);
+  }, (validation) =>{
+      response.status(422).json({
+          errors: validation.errors.map((error) => {
+              return {
+                  attribute: error.path,
+                  message: error.message
+              }
+          })
+
+      });  
+  });
+});
+
+app.listen(process.env.PORT || 8000);
